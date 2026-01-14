@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LangGraph Flowchart</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    padding-top: 50px;
+    background: #f0f0f0;
+  }
+  .flowchart {
+    display: grid;
+    grid-template-columns: 200px 200px 200px;
+    grid-template-rows: auto auto auto;
+    gap: 50px 50px;
+    align-items: center;
+    justify-items: center;
+    position: relative;
+  }
+  .node {
+    padding: 15px 20px;
+    background: #ff4d4d;
+    color: white;
+    border-radius: 10px;
+    text-align: center;
+    position: relative;
+  }
+  .tool-node {
+    background: #4da6ff;
+  }
+  .end-node {
+    background: #33cc33;
+  }
+  .arrow {
+    width: 2px;
+    background: black;
+    position: absolute;
+  }
+  /* Vertical arrows */
+  .arrow.down {
+    height: 50px;
+    left: 50%;
+    top: 100%;
+  }
+  /* Diagonal arrows for conditional */
+  .arrow.diag-right {
+    width: 2px;
+    height: 50px;
+    transform: rotate(45deg);
+    transform-origin: top left;
+    top: 100%;
+    left: 50%;
+  }
+  .arrow.diag-left {
+    width: 2px;
+    height: 50px;
+    transform: rotate(-45deg);
+    transform-origin: top right;
+    top: 100%;
+    left: 50%;
+  }
+  .label {
+    position: absolute;
+    font-size: 12px;
+    font-weight: bold;
+  }
+  .label.right { top: 60px; left: 160px; }
+  .label.left { top: 60px; left: -60px; }
+</style>
+</head>
+<body>
+<div class="flowchart">
+  <div class="node" style="grid-column: 2; grid-row: 1;">Agent (LLM)</div>
+  <div class="node tool-node" style="grid-column: 3; grid-row: 2;">ToolNode (get_book_isbn / check_market_prices)</div>
+  <div class="node end-node" style="grid-column: 2; grid-row: 3;">END</div>
+  
+  <!-- Arrows -->
+  <div class="arrow down" style="grid-column: 2; grid-row: 1;"></div>
+  <div class="arrow diag-right" style="grid-column: 2; grid-row: 1;"></div>
+  <div class="arrow diag-left" style="grid-column: 3; grid-row: 2;"></div>
+  
+  <!-- Labels -->
+  <div class="label right">If tool needed</div>
+  <div class="label left">Return final answer</div>
+</div>
+</body>
+</html>

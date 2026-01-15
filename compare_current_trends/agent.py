@@ -50,3 +50,48 @@ def investigate_highlight(state: AgentState):
     """ 
 
     return {"messages": [HumanMessage(content=evidence_msg)]}
+
+def judge_verdict(state: AgentState):
+    """ Step 3: The Final Decision""" 
+
+    # We bind the Pydantic model to the LLM to force JSON output 
+    structured_llm = llm.with_structured_output(FactCheck)
+
+    system_prompt = """
+    You are a Fact Checking Editor. 
+    Review the Highlight, the Book Context, and the Search Evidence.
+    
+    Determine if the highlight is:
+    - VERIFIED (Evidence supports it)
+    - OUTDATED (It was true then, but false/bad advice now)
+    - DEBUNKED (It was never true)
+    - NUANCED (It's complicated)
+    
+    Fill out the report accurately.
+    """
+    
+    # We pass the full history (Context -> Evidence) to the Judge
+    messages = [SystemMessage(content=system_prompt)] + state["messages"]
+    
+    # Generate the Pydantic object
+    verdict = structured_llm.invoke(messages)
+    
+    return {"final_verdict": verdict}
+
+## ----- Graph Construction -----
+
+workflow = StateGraph(AgentState)
+
+# Add nodes 
+workflow.add_node("get_context", get_book_context)
+workflow.add_node("investigate", investigate_highlight)
+workflow.add_node("judge", judge_verdict)
+
+# Set flow 
+workflow.set_entry_point("get_context")
+workflow.add_edge("get_context", "investigate")
+workflow.add_edge("investigate", "judge")
+workflow.add_edge("judge", END) 
+
+# Compile 
+reality_check_agent = workflow.compile() 

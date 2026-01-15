@@ -22,4 +22,4 @@ class AgentState(TypedDict):
     target_book: str                # <----- Context
     highlight_text: List[str]     # <----- Scratchpad (To-do list)
     
-    final_report: Optional[FactCheck] # <------- The Goal (Starts empty) 
+    final_verdict: Optional[FactCheck] # <------- The Goal (Starts empty) 
